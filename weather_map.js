@@ -10,7 +10,9 @@
 
 $().ready(function() {
 
-var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936');
+var lat = 29.4241;
+var long = -98.4936;
+var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lat + ', ' + long);
 
 var conditionsArray = [
    {
@@ -58,6 +60,18 @@ weatherData.done(function (data) {
    $('#tomorrow').html(buildHTML(dataTomorrow, conditionsArray));
    $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
 });
+
+   function customWeather(data) {
+      console.log(data);
+
+      var dataToday = buildDays('Today', data.daily.data[0]);
+      var dataTomorrow = buildDays('Tomorrow', data.daily.data[1]);
+      var dataDayAfter = buildDays('The Day After', data.daily.data[2]);
+
+      $('#today').html(buildHTML(dataToday, conditionsArray));
+      $('#tomorrow').html(buildHTML(dataTomorrow, conditionsArray));
+      $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
+   }
 
 
 function buildDays(title, data) {
@@ -110,10 +124,14 @@ function buildHTML(data, conditionsArray) {
    html += data.pressure + '</li><li class="list-inline-item">';
    html += data.windSpeed + '</li></ul></div>';
 
-
-
-
    return html;
 }
+
+$('#submit').on('click', function() {
+   lat = $('#lat').val();
+   long = $('#long').val();
+   $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lat + ',' + long)
+      .done(customWeather)
+})
 
 });
