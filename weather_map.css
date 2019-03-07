@@ -1,0 +1,10 @@
+body {
+    background: #333;
+    color:#eee;
+}
+
+#icon {
+    height: 50px;
+    width: 50px;
+    border: 1px solid #aaa;
+}
