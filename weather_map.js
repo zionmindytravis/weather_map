@@ -9,43 +9,53 @@
 //     .done(display)
 
 $().ready(function() {
+
 var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936');
 
 //add san antonio conditions
 
 weatherData.done(function (data) {
-   $('#today').html(buildDays(data));
+   console.log(data);
+
+   var dataToday = buildDays('Today', data.daily.data[0]);
+   var dataTomorrow = buildDays('Tomorrow', data.daily.data[1]);
+   var dataDayAfter = buildDays('The Day After', data.daily.data[2]);
+
+   $('#today').html(buildHTML(dataToday));
+   $('#tomorrow').html(buildHTML(dataTomorrow));
+   $('#dayAfter').html(buildHTML(dataDayAfter));
 });
 
-function buildDays(data) {
-   var today = new Date(data.daily.data[0].time * 1000);
-   console.log(today);
-   console.log(data.daily.data[0].summary);
-   console.log(data.daily.data[0].apparentTemperatureHigh);
-   console.log(data.daily.data[0].apparentTemperatureLow);
-   console.log(data.daily.data[0].humidity);
-   console.log(data.daily.data[0].pressure);
-   console.log(data.daily.data[0].windSpeed);
-   console.log(data);
+
+function buildDays(title, data) {
+   return {
+      title: title,
+      today: new Date(data.time * 1000),
+      summary: data.summary,
+      hiTemp: Math.round(data.apparentTemperatureHigh) + '°F',
+      loTemp: Math.round(data.apparentTemperatureLow) + '°F',
+      humidity: 'Humidity: ' + data.humidity,
+      pressure: 'Pressure: ' + data.pressure,
+      windSpeed: 'Wind Speed: ' + data.windSpeed
+   }
+}
+
+
+function buildHTML(data) {
+
    var html ='';
 
-   html += '<div class="row mx-auto"><h4>' + 'Today' + '<br>' + '</h4>' + today + '</div>';
-   html += '<div class="row">';
-   html += '<div class="col">'
-   html += '<div id="icon"></div>';
-   html += '<div>' + data.daily.data[0].summary + '</div>';
-   html += '</div>';
-   html += '<div class="col">' + data.daily.data[0].apparentTemperatureHigh + '<br>' + data.daily.data[0].apparentTemperatureLow + '</div>';
-   html += '</div>';
-   html += '<div class="row"><ul class="list-inline">';
-   html += '<li class="list-inline-item">' + data.daily.data[0].humidity + '</li>';
-   html += '<li class="list-inline-item">' + data.daily.data[0].pressure + '</li>';
-   html += '<li class="list-inline-item">' + data.daily.data[0].windSpeed + '</li>';
-   html += '</ul></div>';
+   html += '<div class="row mx-auto"><h4>' + data.title + '<br></h4>';
+   html += data.today + '</div><div class="row"><div class = "col">';
+   html += '<div id="icon"></div><div>' + data.summary + '</div>';
+   html += '</div><div class="col">' + data.hiTemp + '<br>';
+   html += data.loTemp + '</div></div><div class="row">';
+   html += '<ul class="list-inline"><li class="list-inline-item">';
+   html += data.humidity + '</li><li class="list-inline-item">';
+   html += data.pressure + '</li><li class="list-inline-item">';
+   html += data.windSpeed + '</li></ul></div>';
 
    return html
 }
-
-console.log("hello" + weatherData);
 
 });
