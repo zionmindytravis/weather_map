@@ -11,7 +11,8 @@
 $().ready(function() {
 
 var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936');
-var conditions = [
+
+var conditionsArray = [
    {
       condition: 'clear-day',
       icon:'icon/Sun.svg'
@@ -53,9 +54,9 @@ weatherData.done(function (data) {
    var dataTomorrow = buildDays('Tomorrow', data.daily.data[1]);
    var dataDayAfter = buildDays('The Day After', data.daily.data[2]);
 
-   $('#today').html(buildHTML(dataToday));
-   $('#tomorrow').html(buildHTML(dataTomorrow));
-   $('#dayAfter').html(buildHTML(dataDayAfter));
+   $('#today').html(buildHTML(dataToday, conditionsArray));
+   $('#tomorrow').html(buildHTML(dataTomorrow, conditionsArray));
+   $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
 });
 
 
@@ -72,20 +73,36 @@ function buildDays(title, data) {
       windSpeed: 'Wind Speed: ' + data.windSpeed
    }
 }
-function findIcon(data) {
-   console.log(data);
+// function findIcon(icon, conditionsArray) {
+//
+//    conditionsArray.forEach(function(condition) {
+//       if (icon === condition.condition) {
+//          console.log(condition.icon);
+//          console.log(typeof condition.icon);
+//          return condition.icon;
+//       }
+//    });
+//
+//    // return conditions[1].icon;
+// }
 
-   return conditions[1].icon;
-}
 
-
-function buildHTML(data) {
+function buildHTML(data, conditionsArray) {
 
    var html ='';
 
+   var weatherPicture = '';
+
+   conditionsArray.forEach(function(condition) {
+      if (data.icon === condition.condition) {
+         weatherPicture = condition.icon;
+      }
+   });
+
    html += '<div class="row mx-auto"><h4>' + data.title + '<br></h4>';
    html += data.today + '</div><div class="row"><div class = "col">';
-   html += '<div id="icon">' + findIcon(data.icon) + '</div><div>' + data.summary + '</div>';
+   html += '<div id="icon">' + '<img src="' + weatherPicture + '">';
+   html += '</div><div>' + data.summary + '</div>';
    html += '</div><div class="col">' + data.hiTemp + '<br>';
    html += data.loTemp + '</div></div><div class="row">';
    html += '<ul class="list-inline"><li class="list-inline-item">';
@@ -93,7 +110,10 @@ function buildHTML(data) {
    html += data.pressure + '</li><li class="list-inline-item">';
    html += data.windSpeed + '</li></ul></div>';
 
-   return html
+
+
+
+   return html;
 }
 
 });
