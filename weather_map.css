@@ -10,7 +10,8 @@ body {
 }
 
 #map {
-    width: 100%;
-    min-height: 200px;
+    width: calc(100% - 4em);
+    min-height: 600px;
     background-color: lightcoral;
+    margin: 2em;
 }

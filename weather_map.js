@@ -1,13 +1,5 @@
 'use strict';
 
-// function display (data) {
-//     var weatherData = data;
-//     console.log("weatherData: + weatherData);
-// }
-
-// $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936')
-//     .done(display)
-
 $().ready(function() {
 
 var lat = 29.4241;
@@ -62,8 +54,6 @@ weatherData.done(function (data) {
 });
 
    function customWeather(data) {
-      console.log(data);
-
       var dataToday = buildDays('Today', data.daily.data[0]);
       var dataTomorrow = buildDays('Tomorrow', data.daily.data[1]);
       var dataDayAfter = buildDays('The Day After', data.daily.data[2]);
@@ -72,7 +62,6 @@ weatherData.done(function (data) {
       $('#tomorrow').html(buildHTML(dataTomorrow, conditionsArray));
       $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
    }
-
 
 function buildDays(title, data) {
    return {
@@ -87,19 +76,6 @@ function buildDays(title, data) {
       windSpeed: 'Wind Speed: ' + data.windSpeed
    }
 }
-// function findIcon(icon, conditionsArray) {
-//
-//    conditionsArray.forEach(function(condition) {
-//       if (icon === condition.condition) {
-//          console.log(condition.icon);
-//          console.log(typeof condition.icon);
-//          return condition.icon;
-//       }
-//    });
-//
-//    // return conditions[1].icon;
-// }
-
 
 function buildHTML(data, conditionsArray) {
 
@@ -134,14 +110,37 @@ $('#submit').on('click', function() {
       .done(customWeather)
 });
 
+   //map box
+   mapboxgl.accessToken = mapboxToken;
+
+   var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v9',
+      zoom: 3,
+      center: [ -98.4936282, 29.4241219]
+   });
+
+   var marker = new mapboxgl.Marker({
+      draggable: true
+   })
+       .setLngLat([-98.4936282, 29.4241219])
+       .addTo(map);
+
+   function onDragEnd() {
+      var lngLat = marker.getLngLat();
+      console.log(lngLat);
+      $('#lat').text = lngLat.lat;
+      $('#long').text = lngLat.lng;
+
+
+      // $('#lat').val();
+      // $('#long').val();
+      $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lngLat.lat + ',' + lngLat.lng)
+          .done(customWeather)
+
+   }
+
+   marker.on('dragend', onDragEnd);``
+
 });
 
-//map box
-mapboxgl.accessToken = mapboxToken;
-
-var map = new mapboxgl.Map({
-   container: 'map',
-   style: 'mapbox://styles/mapbox/streets-v9',
-   zoom: 10,
-   center: [ -98.4936282, 29.4241219]
-});
