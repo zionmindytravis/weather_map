@@ -132,6 +132,15 @@ $('#submit').on('click', function() {
    long = $('#long').val();
    $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lat + ',' + long)
       .done(customWeather)
-})
+});
 
+});
+//map box
+mapboxgl.accessToken = mapboxToken;
+
+var map = new mapboxgl.Map({
+   container: 'map',
+   style: 'mapbox://styles/mapbox/streets-v9',
+   zoom: 10,
+   center: [ -98.4936282, 29.4241219]
 });

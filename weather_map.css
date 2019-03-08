@@ -8,3 +8,7 @@ body {
     width: 50px;
     border: 1px solid #aaa;
 }
+
+#map {
+    position:absolute; top:0; bottom:0; width:100%;
+}
