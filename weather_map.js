@@ -135,6 +135,7 @@ $('#submit').on('click', function() {
 });
 
 });
+
 //map box
 mapboxgl.accessToken = mapboxToken;
 
