@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <title>Weather Map Exercise</title>
+    <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="weather_map.css">
 </head>
-<link rel='stylesheet'
-      href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css'
-      integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T'
-      crossorigin='anonymous'>
-<link rel="stylesheet" href="weather_map.css">
+
+
 <body>
 <main>
     <header>
@@ -20,12 +21,29 @@
             <div id="tomorrow" class="col-12 col-md-4 mx-auto day"></div>
             <div id="dayAfter" class="col-12 col-md-4 mx-auto day"></div>
         </div>
+        <div class="form">
+            <div class="row d-flex justify-content-center">
+                <div class="col-4 mx-auto">
+                    <input id="lat" type="text" class="form-control" placeholder="latitude">
+                </div>
+                <div  class="col-4 mx-auto">
+                    <input id="long" type="text" class="form-control" placeholder="longitude">
+                </div>
+                <div id="submit" class="btn btn-secondary">submit</div>
+            </div>
+        </div>
     </div>
+    <div id='map'></div>
+    <pre id='coordinates' class='coordinates'></pre>
+
+
 
 </main>
 </body>
-
 <script src='https://code.jquery.com/jquery-3.3.1.min.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+<script src="mapbox-geocoder-utils.js"></script>
+
 <script src='keys.js'></script>
 <script src="weather_map.js"></script>
 

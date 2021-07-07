@@ -8,3 +8,10 @@ body {
     width: 50px;
     border: 1px solid #aaa;
 }
+
+#map {
+    width: calc(100% - 4em);
+    min-height: 600px;
+    background-color: lightcoral;
+    margin: 2em;
+}

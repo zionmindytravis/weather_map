@@ -1,16 +1,10 @@
 'use strict';
 
-// function display (data) {
-//     var weatherData = data;
-//     console.log("weatherData: + weatherData);
-// }
-
-// $.ajax('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936')
-//     .done(display)
-
 $().ready(function() {
 
-var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/29.4241,-98.4936');
+var lat = 29.4241;
+var long = -98.4936;
+var weatherData = $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lat + ', ' + long);
 
 var conditionsArray = [
    {
@@ -59,6 +53,15 @@ weatherData.done(function (data) {
    $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
 });
 
+   function customWeather(data) {
+      var dataToday = buildDays('Today', data.daily.data[0]);
+      var dataTomorrow = buildDays('Tomorrow', data.daily.data[1]);
+      var dataDayAfter = buildDays('The Day After', data.daily.data[2]);
+
+      $('#today').html(buildHTML(dataToday, conditionsArray));
+      $('#tomorrow').html(buildHTML(dataTomorrow, conditionsArray));
+      $('#dayAfter').html(buildHTML(dataDayAfter, conditionsArray));
+   }
 
 function buildDays(title, data) {
    return {
@@ -73,19 +76,6 @@ function buildDays(title, data) {
       windSpeed: 'Wind Speed: ' + data.windSpeed
    }
 }
-// function findIcon(icon, conditionsArray) {
-//
-//    conditionsArray.forEach(function(condition) {
-//       if (icon === condition.condition) {
-//          console.log(condition.icon);
-//          console.log(typeof condition.icon);
-//          return condition.icon;
-//       }
-//    });
-//
-//    // return conditions[1].icon;
-// }
-
 
 function buildHTML(data, conditionsArray) {
 
@@ -110,10 +100,47 @@ function buildHTML(data, conditionsArray) {
    html += data.pressure + '</li><li class="list-inline-item">';
    html += data.windSpeed + '</li></ul></div>';
 
-
-
-
    return html;
 }
 
+$('#submit').on('click', function() {
+   lat = $('#lat').val();
+   long = $('#long').val();
+   $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lat + ',' + long)
+      .done(customWeather)
 });
+
+   //map box
+   mapboxgl.accessToken = mapboxToken;
+
+   var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v9',
+      zoom: 3,
+      center: [ -98.4936282, 29.4241219]
+   });
+
+   var marker = new mapboxgl.Marker({
+      draggable: true
+   })
+       .setLngLat([-98.4936282, 29.4241219])
+       .addTo(map);
+
+   function onDragEnd() {
+      var lngLat = marker.getLngLat();
+      console.log(lngLat);
+      $('#lat').text = lngLat.lat;
+      $('#long').text = lngLat.lng;
+
+
+      // $('#lat').val();
+      // $('#long').val();
+      $.get('https://cors-anywhere.herokuapp.com/https://api.darksky.net/forecast/' + darkskyToken + '/' + lngLat.lat + ',' + lngLat.lng)
+          .done(customWeather)
+
+   }
+
+   marker.on('dragend', onDragEnd);``
+
+});
+
